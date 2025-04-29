@@ -1,20 +1,14 @@
 "use client"
-import { useSession, signIn, signOut } from "next-auth/react"
+import React from 'react'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z  from "zod"
+import Link from 'next/link'
 
-export default function Component() {
-  const { data: session } = useSession()
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    )
-  }
+const signInPage = () => {
   return (
-    <>
-      Not signed in <br />
-      <button className="bg-orange-500" onClick={() => signIn()}>Sign in</button>
-    </>
+    <div>signInPage</div>
   )
 }
+
+export default signInPage
