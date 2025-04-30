@@ -36,14 +36,14 @@ export async function GET(request: Request) {
      if(existingVerifieduser){
         return Response.json({
             success : false,
-            message : "username is already taken"
+            message : "This username is already taken"
         },{
             status : 400,
         })
      }
      return Response.json({
         success : true,
-        message : "username is avilable"
+        message : "This username is avilable"
     },{
         status : 200,
     })

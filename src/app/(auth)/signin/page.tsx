@@ -1,14 +1,9 @@
-"use client"
 import React from 'react'
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z  from "zod"
-import Link from 'next/link'
 
-const signInPage = () => {
+const signinPage = () => {
   return (
-    <div>signInPage</div>
+    <div>signinPage</div>
   )
 }
 
-export default signInPage
+export default signinPage
