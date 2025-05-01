@@ -91,6 +91,7 @@ const SignupPage = () => {
       toast.success(response.data.message || "Account created successfully!", {
         id: toastId,
       });
+      sessionStorage.setItem("verifyEmail", data.email);
 
       router.replace(`/verify/${data.username}`);
     } catch (error) {

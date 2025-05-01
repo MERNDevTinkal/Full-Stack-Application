@@ -20,7 +20,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-// matcher sahi karo — sab sahi route likho
 export const config = {
     matcher: [
         '/signin',
