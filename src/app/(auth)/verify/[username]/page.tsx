@@ -11,6 +11,7 @@ import { verifySchema } from "@/schemas/verifySchema";
 import axios, { AxiosError } from "axios";
 
 const VerifyPage = ({ params }: { params: { username: string } }) => {
+  
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(true);

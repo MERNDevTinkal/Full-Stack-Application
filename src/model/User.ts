@@ -1,8 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface Message extends Document {
-  content: string,
-  createdAt: Date,
+  content: string;
+  createdAt: Date;
 }
 
 const MessageSchema: Schema<Message> = new Schema({
@@ -14,18 +14,20 @@ const MessageSchema: Schema<Message> = new Schema({
     type: Date,
     required: true,
     default: Date.now,
-  }
+  },
 });
 
 export interface User extends Document {
-  username: string,
-  email: string,
-  password: string,
-  verifyCode: string,
-  verifyCodeExpire: Date,
-  isVerified : boolean,
-  isAcceptingMessage: boolean,
-  messages: Message[],
+  username: string;
+  email: string;
+  password: string;
+  verifyCode?: string | null;
+  verifyCodeExpire?: Date | null;
+  isVerified: boolean;
+  isAcceptingMessage: boolean;
+  messages: Message[];
+  resetPasswordToken?: string;
+  resetPasswordExpire?: Date;
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -39,39 +41,49 @@ const UserSchema: Schema<User> = new Schema({
   },
   email: {
     type: String,
-    required: [true, "email is required"],
+    required: [true, "Email is required"],
     unique: true,
     lowercase: true,
     match: [
       /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/,
-      "Please enter a valid email address"
+      "Please enter a valid email address",
     ],
   },
-  password : {
+  password: {
     type: String,
-    required: [true, "Psssword  is required"],
-    minlength : 6,
+    required: [true, "Password is required"],
+    minlength: 6,
   },
-  verifyCode : {
+  verifyCode: {
     type: String,
-    required: [true, " verifyCode is required"],
+    default: null,
   },
-  verifyCodeExpire : {
-    type : Date,
-    required: [true, " verifyCode expire is required"],
+  verifyCodeExpire: {
+    type: Date,
+    default: null,
   },
-  isVerified : {
-    type : Boolean,
-    default : false,
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
-  isAcceptingMessage : {
-    type : Boolean,
-    default : true,
+  isAcceptingMessage: {
+    type: Boolean,
+    default: true,
   },
-  messages: [MessageSchema]
-
+  messages: [MessageSchema],
+  
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpire: {
+    type: Date,
+    default: null,
+  },
 });
 
-const UserModel = (mongoose.models.User as mongoose.Model<User>) || (mongoose.model<User>("User",UserSchema));
+const UserModel =
+  (mongoose.models.User as mongoose.Model<User>) ||
+  mongoose.model<User>("User", UserSchema);
 
 export default UserModel;

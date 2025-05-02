@@ -9,11 +9,14 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormField, FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { signInSchema } from "@/schemas/signInSchema"; 
+import { signInSchema } from "@/schemas/signInSchema";
+import { Eye, EyeOff } from "lucide-react";
 
 const SignInPage = () => {
+  
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -33,13 +36,13 @@ const SignInPage = () => {
         identifier: data.identifier,
         password: data.password,
       });
-      console.log("This is result",result);
+      console.log("This is result", result);
 
       if (result?.error) {
         toast.error(result.error, { id: toastId });
       } else if (result?.url) {
         toast.success("Logged in successfully!", { id: toastId });
-        router.push("/dashboard"); 
+        router.push("/dashboard");
       }
     } catch (error) {
       toast.error("An unexpected error occurred. Please try again.", { id: toastId });
@@ -80,16 +83,33 @@ const SignInPage = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="password"
+                        {...field}
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
+
                 </FormItem>
               )}
             />
+            <a href="forgot-password">forgotPassword</a>
 
             <Button
               type="submit"
@@ -109,6 +129,7 @@ const SignInPage = () => {
               >
                 Sign up
               </a>
+
             </p>
           </div>
         </div>

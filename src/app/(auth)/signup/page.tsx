@@ -9,7 +9,12 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import {
   Form,
@@ -23,6 +28,7 @@ import Link from "next/link";
 import { signUpSchema } from "@/schemas/signUpSchema";
 
 const SignupPage = () => {
+  
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
@@ -32,17 +38,8 @@ const SignupPage = () => {
 
   const [debouncedUsername] = useDebounceValue<string>(username, 500);
 
-  const schema = signUpSchema
-    .extend({
-      confirmPassword: z.string(),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    });
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: "",
       email: "",
@@ -59,19 +56,18 @@ const SignupPage = () => {
       }
 
       setIsCheckingUsername(true);
-
       try {
         const response = await axios.get(
           `/api/chake-username-unique?username=${debouncedUsername}`
         );
         form.clearErrors("username");
-        //  console.log(response.data.message);
       } catch (error) {
         const axiosError = error as AxiosError<{ message: string }>;
         form.setError("username", {
           type: "manual",
           message:
-            axiosError.response?.data.message || "Username is not available",
+            axiosError.response?.data.message ||
+            "Username is not available",
         });
       } finally {
         setIsCheckingUsername(false);
@@ -81,24 +77,22 @@ const SignupPage = () => {
     checkUsernameUnique();
   }, [debouncedUsername, form]);
 
-  const onSubmit = async (data: z.infer<typeof schema>) => {
+  const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
     const toastId = toast.loading("Creating your account...");
 
     try {
       const response = await axios.post(`/api/signup`, data);
-
       toast.success(response.data.message || "Account created successfully!", {
         id: toastId,
       });
-      sessionStorage.setItem("verifyEmail", data.email);
 
+      sessionStorage.setItem("verifyEmail", data.email);
       router.replace(`/verify/${data.username}`);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       const errorMessage =
         axiosError.response?.data.message || "Signup failed. Please try again.";
-
       toast.error(errorMessage, {
         id: toastId,
         action: {
@@ -199,10 +193,6 @@ const SignupPage = () => {
                       </div>
                     </FormControl>
                     <FormMessage />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      At least 6 characters with uppercase, lowercase, number
-                      and special character
-                    </p>
                   </FormItem>
                 )}
               />
@@ -246,9 +236,9 @@ const SignupPage = () => {
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full mt-6 transition-all 
-    hover:bg-primary/90 
-    ${isSubmitting ? " hover:cursor-not-allowed bg-primary/80 opacity-60" : ""}
-  `}
+                  hover:bg-primary/90 
+                  ${isSubmitting ? " hover:cursor-not-allowed bg-primary/80 opacity-60" : ""}
+                `}
               >
                 {isSubmitting ? (
                   <>
