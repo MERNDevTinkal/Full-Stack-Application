@@ -26,8 +26,8 @@ export interface User extends Document {
   isVerified: boolean;
   isAcceptingMessage: boolean;
   messages: Message[];
-  resetPasswordToken?: string;
-  resetPasswordExpire?: Date;
+  resetPasswordToken?: string | null;  
+  resetPasswordExpire?: Date | null;  
 }
 
 const UserSchema: Schema<User> = new Schema({

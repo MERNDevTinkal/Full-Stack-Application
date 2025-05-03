@@ -7,11 +7,13 @@ import crypto from "crypto";
 export async function POST(req: Request) {
   await dbConnect();
 
-  try {
+  try { 
+
     const { email } = await req.json();
 
     // Check if user exists and is verified
     const user = await UserModel.findOne({ email });
+
     if (!user || !user.isVerified) {
       return NextResponse.json(
         { success: false, message: "Email not registered or verified." },
@@ -28,10 +30,12 @@ export async function POST(req: Request) {
     user.resetPasswordExpire = resetTokenExpire;
     await user.save();
 
-    const resetUrl = `${process.env.NEXT_PUBLIC_URL}/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/resetPassword/${resetToken}`;
+
 
     // Send reset email
     const result = await sendResetEmail(user.email, user.username, resetUrl);
+    
 
     if (!result.success) {
       return NextResponse.json(

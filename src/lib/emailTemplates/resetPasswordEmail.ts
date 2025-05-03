@@ -5,7 +5,7 @@ export const resetEmailHTML = (username: string, resetLink: string) => `
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff; padding:40px; border-radius:8px; font-family: Arial, sans-serif;">
         <tr>
           <td align="center" style="padding-bottom:20px;">
-            <h1 style="color:#333;">TrueFeedback</h1>
+            <h1 style="color:#333; margin: 0;">TrueFeedback</h1>
           </td>
         </tr>
         <tr>
@@ -19,6 +19,12 @@ export const resetEmailHTML = (username: string, resetLink: string) => `
             <a href="${resetLink}" target="_blank" style="display:inline-block; background-color:#4CAF50; color:white; padding:15px 30px; border-radius:5px; font-size:16px; font-weight:bold; text-decoration:none;">
               Reset Password
             </a>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size:16px; color:#555; text-align:center; padding-top:10px;">
+            <p>If the button doesn't work, copy and paste this link in your browser:</p>
+            <p style="word-break:break-all;"><a href="${resetLink}" style="color:#1a73e8;">${resetLink}</a></p>
           </td>
         </tr>
         <tr>

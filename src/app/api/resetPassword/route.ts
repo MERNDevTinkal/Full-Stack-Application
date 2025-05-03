@@ -12,6 +12,8 @@ export async function POST(req: Request) {
 
     // Validate token
     const user = await UserModel.findOne({ resetPasswordToken: token });
+    console.log("User found for token:", user); 
+
     if (!user) {
       return NextResponse.json(
         { success: false, message: 'Invalid reset token.' },
@@ -20,7 +22,8 @@ export async function POST(req: Request) {
     }
 
     // Check if the token has expired
-    if (user.resetPasswordExpire < new Date()) {
+    const currentTime = new Date();
+    if (user.resetPasswordExpire && new Date(user.resetPasswordExpire) < currentTime) {
       return NextResponse.json(
         { success: false, message: 'Reset token has expired.' },
         { status: 400 }

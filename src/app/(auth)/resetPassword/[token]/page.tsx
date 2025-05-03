@@ -7,7 +7,7 @@ import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { resetSchema } from '@/schemas/resetSchema';
 import { z } from 'zod';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
@@ -15,9 +15,10 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react';
 type ResetFormData = z.infer<typeof resetSchema>;
 
 export default function ResetPasswordPage() {
+
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams?.get('token'); // Get token from URL
+  const params = useParams();
+  const token = params.token;
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -33,8 +34,9 @@ export default function ResetPasswordPage() {
       confirmPassword: '',
     },
   });
-
+ 
   useEffect(() => {
+    console.log("Token:", token);
     if (!token) {
       toast.error("Invalid or missing reset token.");
       router.push('/signin');
@@ -46,6 +48,8 @@ export default function ResetPasswordPage() {
     try {
       // Sending reset request with token
       const res = await axios.post('/api/resetPassword', { ...data, token });
+      console.log("Response from backend:", res.data); 
+
       toast.success(res.data.message);
       router.push('/signin');
     } catch (error: any) {
